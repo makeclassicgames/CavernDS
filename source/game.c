@@ -10,13 +10,14 @@
 
 void initGame(Game *game)
 {
-    game->currentState = MAIN_MENU;
     game->frame = 0;
     Sprite elli = {0, 0};
     PLYR_init(&game->player, (Vector2D){32, 32});
+   
+    SPR_initSprite(&elli, &oamMain, (u8 *)ellireadyTiles, 32, 32, 5, 3);
     elli.anim_frame = 0;
-    elli.state = IDLE;
-    initSprite(&elli, (u8 *)ellireadyTiles);
+    elli.direction = IDLE;
+    // initSprite(&elli, (u8 *)ellireadyTiles);
     game->player.entity.velocity.x = 0;
     game->player.entity.velocity.y = 0;
     game->player.sprite = elli;
@@ -32,23 +33,23 @@ void updateGame(Game *game)
 
         if (INPUT_keysHeld(&game->inputHandler, KEY_LEFT))
         {
-            game->player.sprite.state = LEFT;
+            game->player.sprite.direction = LEFT;
             game->player.entity.velocity.x = -2;
         }
         if (INPUT_keysHeld(&game->inputHandler, KEY_RIGHT))
         {
-            game->player.sprite.state = RIGHT;
+            game->player.sprite.direction = RIGHT;
             game->player.entity.velocity.x = 2;
         }
         if (INPUT_keysDown(&game->inputHandler, KEY_A) && !PLYR_isJumping(&game->player))
         {
-            game->player.sprite.state = IDLE;
+            game->player.sprite.direction = IDLE;
             PLYR_jump(&game->player);
         }
     }
     else
     {
-        game->player.sprite.state = IDLE;
+        game->player.sprite.direction = IDLE;
         game->player.entity.velocity.x = 0;
         game->player.entity.velocity.y = 0;
     }
@@ -58,7 +59,8 @@ void updateGame(Game *game)
 
 void drawGame(Game *game)
 {
-    animSprite(&game->player.sprite);
+    //animSprite(&game->player.sprite);
+    SPR_update(&game->player.sprite);
     oamSet(&oamMain, 0, game->player.entity.position.x, game->player.entity.position.y, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color,
            game->player.sprite.sprite_gfx_frame, -1, false, false, false, false, false);
 

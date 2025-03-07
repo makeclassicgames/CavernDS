@@ -21,7 +21,7 @@ int main(void)
 
    
     init();
-    loadNextState(&game, MAIN_MENU);
+    loadNextState(&game, PLAYING);
    
     oamInit(&oamMain, SpriteMapping_1D_128, false);
 
@@ -55,7 +55,6 @@ void init(void)
 
     bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
     bgInitSub(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
-    game.currentState = MAIN_MENU;
 }
 
 void update(void)

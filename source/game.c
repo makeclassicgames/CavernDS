@@ -15,9 +15,8 @@ void initGame(Game *game)
     PLYR_init(&game->player, (Vector2D){32, 32});
    
     SPR_initSprite(&elli, &oamMain, (u8 *)ellireadyTiles, 32, 32, 5, 3);
-    elli.anim_frame = 0;
-    elli.direction = IDLE;
-    // initSprite(&elli, (u8 *)ellireadyTiles);
+    SPR_setFrame(&elli, 0);
+    SPR_setAnim(&elli, IDLE);
     game->player.entity.velocity.x = 0;
     game->player.entity.velocity.y = 0;
     game->player.sprite = elli;
@@ -33,23 +32,23 @@ void updateGame(Game *game)
 
         if (INPUT_keysHeld(&game->inputHandler, KEY_LEFT))
         {
-            game->player.sprite.direction = LEFT;
+            game->player.sprite.anim = LEFT;
             game->player.entity.velocity.x = -2;
         }
         if (INPUT_keysHeld(&game->inputHandler, KEY_RIGHT))
         {
-            game->player.sprite.direction = RIGHT;
+            game->player.sprite.anim = RIGHT;
             game->player.entity.velocity.x = 2;
         }
         if (INPUT_keysDown(&game->inputHandler, KEY_A) && !PLYR_isJumping(&game->player))
         {
-            game->player.sprite.direction = IDLE;
+            game->player.sprite.anim = IDLE;
             PLYR_jump(&game->player);
         }
     }
     else
     {
-        game->player.sprite.direction = IDLE;
+        game->player.sprite.anim = IDLE;
         game->player.entity.velocity.x = 0;
         game->player.entity.velocity.y = 0;
     }
@@ -59,23 +58,18 @@ void updateGame(Game *game)
 
 void drawGame(Game *game)
 {
-    //animSprite(&game->player.sprite);
+   
     SPR_update(&game->player.sprite);
     oamSet(&oamMain, 0, game->player.entity.position.x, game->player.entity.position.y, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color,
            game->player.sprite.sprite_gfx_frame, -1, false, false, false, false, false);
 
-    game->frame++;
-    if (game->frame % 5 == 0)
-        game->player.sprite.anim_frame++;
-
-    if (game->player.sprite.anim_frame >= FRAMES_PER_ANIMATION)
-        game->player.sprite.anim_frame = 0;
 }
 
 void initMenu(Game *game)
 {
-    decompress(logoBitmap, BG_GFX_SUB, LZ77Vram);
-    decompress(menu_logoBitmap, BG_GFX, LZ77Vram);
+    Level levelMenu;
+    initLevel(&levelMenu, &menu_logoBitmap, 1, &logoBitmap, 1);
+    game->currentLevel = levelMenu;
 } 
 
 
@@ -83,6 +77,10 @@ void updateMenu(Game* game){
     if(INPUT_keysDown(&game->inputHandler, KEY_START)){
         loadNextState(game, PLAYING);
     }
+}
+
+void drawMenu(Game* game){
+    drawLevel(&game->currentLevel);
 }
 
 void loadNextState(Game *game, u8 state)

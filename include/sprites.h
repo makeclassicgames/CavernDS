@@ -8,8 +8,8 @@ typedef struct
 
     u16 *sprite_gfx_frame;
     u8 *frame_gfx;
-    int direction;
-    int anim_frame;
+    int anim;
+    int frame;
     int delay_frame;
     int frames_per_animation;
     u8 frame_width;
@@ -31,5 +31,8 @@ void animSprite(Sprite *);
 void initSprite(Sprite *, u8 *);
 
 void SPR_initSprite(Sprite *,OamState*, u8 *, u8, u8, int, int );
+void SPR_update(Sprite*);
+void SPR_setAnim(Sprite*, int);
+void SPR_setFrame(Sprite*, int);
 
 #endif

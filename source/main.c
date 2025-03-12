@@ -80,7 +80,8 @@ void draw(void)
     switch (game.currentState)
     {
     case MAIN_MENU:
-
+        drawMenu(&game);
+        break;
     case PLAYING:
     drawGame(&game);
         break;

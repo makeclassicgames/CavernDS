@@ -6,6 +6,7 @@
 #include "player.h"
 #include "input.h"
 #include "engine.h"
+#include "levels.h"
 
 enum GameState{
     SPLASH_SCREEN,
@@ -20,8 +21,12 @@ typedef struct{
     Player player;
     InputHanlder inputHandler;
     u32 frame;
+    Level currentLevel;
 }Game;
 
+//TODO: Add Level Structure
+
+//TODO: Add Level Change Functions
 
 void initGame(Game*);
 void updateGame(Game*);
